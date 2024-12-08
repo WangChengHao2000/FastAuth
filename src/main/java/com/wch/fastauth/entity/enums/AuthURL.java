@@ -1,21 +1,36 @@
 package com.wch.fastauth.entity.enums;
 
-import com.wch.fastauth.exception.AuthException;
+public enum AuthURL implements AuthURLProvider {
+    GITHUB {
+        @Override
+        public String authorize() {
+            return "https://github.com/login/oauth/authorize";
+        }
 
-public interface AuthURL {
+        @Override
+        public String accessToken() {
+            return "https://github.com/login/oauth/access_token";
+        }
 
-    String authorize();
+        @Override
+        public String userInfo() {
+            return "https://api.github.com/user";
+        }
+    },
+    GITEE {
+        @Override
+        public String authorize() {
+            return "https://gitee.com/oauth/authorize";
+        }
 
-    String accessToken();
+        @Override
+        public String accessToken() {
+            return "https://gitee.com/oauth/token";
+        }
 
-    String userInfo();
-
-    default String revoke() {
-        throw new AuthException(AuthResponseStatus.UNSUPPORTED);
-    }
-
-    default String refresh() {
-        throw new AuthException(AuthResponseStatus.UNSUPPORTED);
-    }
-
+        @Override
+        public String userInfo() {
+            return "https://gitee.com/api/v5/user";
+        }
+    },
 }

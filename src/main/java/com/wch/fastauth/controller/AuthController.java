@@ -1,6 +1,5 @@
 package com.wch.fastauth.controller;
 
-import com.wch.fastauth.entity.AuthGiteeInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +11,6 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/oauth")
 public class AuthController {
-
-    @Autowired
-    private AuthGiteeInfo authGiteeInfo;
 
     @GetMapping("/render/gitee")
     public void getGiteeCode(HttpServletResponse response) throws IOException {
