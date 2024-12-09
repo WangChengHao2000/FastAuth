@@ -1,17 +1,19 @@
 package com.wch.fastauth.request;
 
-import com.wch.fastauth.entity.AuthInfo;
+import com.wch.fastauth.entity.*;
 import com.wch.fastauth.entity.enums.AuthPlatformURLProvider;
+import com.wch.fastauth.entity.enums.AuthResponseStatus;
+import com.wch.fastauth.exception.AuthException;
 import com.wch.fastauth.utils.URLBuilder;
 import com.wch.fastauth.utils.URLUtils;
 import com.wch.fastauth.utils.UuidUtils;
 
 import java.util.List;
 
-public class AuthRequest implements AuthRequestProvider {
+public abstract class AuthRequest implements AuthRequestProvider {
 
-    private final AuthInfo authInfo;
-    private final AuthPlatformURLProvider authPlatformURLProvider;
+    protected final AuthInfo authInfo;
+    protected final AuthPlatformURLProvider authPlatformURLProvider;
 
     private String state;
 
@@ -30,6 +32,33 @@ public class AuthRequest implements AuthRequestProvider {
                 .queryParam("state", state)
                 .build();
     }
+
+    @Override
+    public AuthResponse<?> login(AuthCallback authCallback) {
+        AuthToken authToken = this.getAccessToken(authCallback);
+        AuthUser user = this.getUserInfo(authToken);
+        return AuthResponse.builder().code(AuthResponseStatus.SUCCESS.getCode()).data(user).build();
+    }
+
+    protected String doPostAuthorizationCode(String code) {
+        return null;
+    }
+
+    protected String doGetAuthorizationCode(String code) {
+        return null;
+    }
+
+    protected String doPostUserInfo(AuthToken authToken) {
+        return null;
+    }
+
+    protected String doGetUserInfo(AuthToken authToken) {
+        return null;
+    }
+
+    protected abstract AuthToken getAccessToken(AuthCallback authCallback);
+
+    protected abstract AuthUser getUserInfo(AuthToken authToken);
 
     protected String getScopes(List<String> defaultScopes, boolean encode) {
         List<String> scopes = authInfo.getScopes();

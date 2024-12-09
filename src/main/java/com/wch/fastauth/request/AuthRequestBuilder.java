@@ -1,11 +1,10 @@
-package com.wch.fastauth;
+package com.wch.fastauth.request;
 
 import com.wch.fastauth.entity.AuthInfo;
 import com.wch.fastauth.entity.enums.AuthPlatformURL;
 import com.wch.fastauth.entity.enums.AuthPlatformURLProvider;
 import com.wch.fastauth.entity.enums.AuthResponseStatus;
 import com.wch.fastauth.exception.AuthException;
-import com.wch.fastauth.request.AuthRequestProvider;
 
 import java.util.Arrays;
 
