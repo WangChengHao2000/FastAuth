@@ -27,7 +27,10 @@ public class URLBuilder {
     }
 
     public String build() {
-        return this.baseURL + "?" + parseMapToParamString(this.paramMap);
+        if(baseURL.contains("?"))
+            return this.baseURL + "&" + parseMapToParamString(this.paramMap);
+        else
+            return this.baseURL + "?" + parseMapToParamString(this.paramMap);
     }
 
     public void setBaseURL(String baseURL) {

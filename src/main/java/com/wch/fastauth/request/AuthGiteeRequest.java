@@ -1,22 +1,21 @@
 package com.wch.fastauth.request;
 
 import com.wch.fastauth.entity.AuthInfo;
-import com.wch.fastauth.entity.enums.AuthURLProvider;
+import com.wch.fastauth.entity.enums.AuthPlatformURL;
+import com.wch.fastauth.entity.enums.scope.AuthGiteeScope;
+import com.wch.fastauth.utils.AuthScopeUtils;
 import com.wch.fastauth.utils.URLBuilder;
 
-public class AuthGiteeRequest {
+public class AuthGiteeRequest extends AuthRequest {
 
-    private AuthInfo authInfo;
-
-    private AuthURLProvider authURLProvider;
-
-    public String authorize(String state) {
-        return URLBuilder.baseURL(authURLProvider.authorize())
-                .queryParam("response_type", "code")
-                .queryParam("client_id", authInfo.getClientId())
-                .queryParam("redirect_uri", authInfo.getRedirectUri())
-                .queryParam("state", state)
-                .build();
+    public AuthGiteeRequest(AuthInfo authInfo) {
+        super(authInfo, AuthPlatformURL.GITEE);
     }
 
+    @Override
+    public String authorize() {
+        return URLBuilder.baseURL(super.authorize())
+                .queryParam("scope", this.getScopes(AuthScopeUtils.getDefaultScopes(AuthGiteeScope.values()), true))
+                .build();
+    }
 }

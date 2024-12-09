@@ -1,6 +1,10 @@
 package com.wch.fastauth.entity.enums;
 
-public enum AuthURL implements AuthURLProvider {
+import com.wch.fastauth.request.AuthGiteeRequest;
+import com.wch.fastauth.request.AuthGithubRequest;
+import com.wch.fastauth.request.AuthRequestProvider;
+
+public enum AuthPlatformURL implements AuthPlatformURLProvider {
     GITHUB {
         @Override
         public String authorize() {
@@ -15,6 +19,11 @@ public enum AuthURL implements AuthURLProvider {
         @Override
         public String userInfo() {
             return "https://api.github.com/user";
+        }
+
+        @Override
+        public Class<? extends AuthRequestProvider> getTargetClass() {
+            return AuthGithubRequest.class;
         }
     },
     GITEE {
@@ -31,6 +40,11 @@ public enum AuthURL implements AuthURLProvider {
         @Override
         public String userInfo() {
             return "https://gitee.com/api/v5/user";
+        }
+
+        @Override
+        public Class<? extends AuthRequestProvider> getTargetClass() {
+            return AuthGiteeRequest.class;
         }
     },
 }
