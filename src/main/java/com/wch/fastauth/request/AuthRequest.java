@@ -3,7 +3,6 @@ package com.wch.fastauth.request;
 import com.wch.fastauth.entity.*;
 import com.wch.fastauth.entity.enums.AuthPlatformURLProvider;
 import com.wch.fastauth.entity.enums.AuthResponseStatus;
-import com.wch.fastauth.exception.AuthException;
 import com.wch.fastauth.utils.URLBuilder;
 import com.wch.fastauth.utils.URLUtils;
 import com.wch.fastauth.utils.UuidUtils;
@@ -23,7 +22,7 @@ public abstract class AuthRequest implements AuthRequestProvider {
     }
 
     @Override
-    public String authorize() {
+    public String authorizeURL() {
         state = UuidUtils.getUUID();
         return URLBuilder.baseURL(authPlatformURLProvider.authorize())
                 .queryParam("response_type", "code")
@@ -33,15 +32,36 @@ public abstract class AuthRequest implements AuthRequestProvider {
                 .build();
     }
 
+    protected String accessTokenURL(String code) {
+        return URLBuilder.baseURL(authPlatformURLProvider.accessToken())
+                .queryParam("code", code)
+                .queryParam("client_id", authInfo.getClientId())
+                .queryParam("client_secret", authInfo.getClientSecret())
+                .queryParam("grant_type", "authorization_code")
+                .queryParam("redirect_uri", authInfo.getRedirectUri())
+                .build();
+    }
+
+    protected String userInfoURL(AuthToken authToken) {
+        return URLBuilder.baseURL(authPlatformURLProvider.userInfo())
+                .queryParam("access_token", authToken.getAccessToken())
+                .build();
+    }
+
     @Override
     public AuthResponse<?> login(AuthCallback authCallback) {
         AuthToken authToken = this.getAccessToken(authCallback);
         AuthUser user = this.getUserInfo(authToken);
-        return AuthResponse.builder().code(AuthResponseStatus.SUCCESS.getCode()).data(user).build();
+        return AuthResponse.builder()
+                .code(AuthResponseStatus.SUCCESS.getCode())
+                .data(user)
+                .build();
     }
 
     protected String doPostAuthorizationCode(String code) {
-        return null;
+        String body = new HttpRequest().post(accessTokenURL(code)).getBody();
+        System.out.println(body);
+        return body;
     }
 
     protected String doGetAuthorizationCode(String code) {

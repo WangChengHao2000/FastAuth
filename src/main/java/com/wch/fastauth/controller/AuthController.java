@@ -29,7 +29,7 @@ public class AuthController {
                         .scopes(AuthScopeUtils.getDefaultScopes(AuthGiteeScope.values()))
                         .build())
                 .build();
-        String authorizeURL = authRequest.authorize();
+        String authorizeURL = authRequest.authorizeURL();
         System.out.println(authorizeURL);
         response.sendRedirect(authorizeURL);
     }

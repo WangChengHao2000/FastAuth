@@ -18,8 +18,8 @@ public class AuthGiteeRequest extends AuthRequest {
     }
 
     @Override
-    public String authorize() {
-        return URLBuilder.baseURL(super.authorize())
+    public String authorizeURL() {
+        return URLBuilder.baseURL(super.authorizeURL())
                 .queryParam("scope", this.getScopes(AuthScopeUtils.getDefaultScopes(AuthGiteeScope.values()), true))
                 .build();
     }

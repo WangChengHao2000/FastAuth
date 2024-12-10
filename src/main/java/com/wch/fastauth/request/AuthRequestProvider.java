@@ -7,7 +7,7 @@ import com.wch.fastauth.exception.AuthException;
 
 public interface AuthRequestProvider {
 
-    default String authorize() {
+    default String authorizeURL() {
         throw new AuthException(AuthResponseStatus.NOT_IMPLEMENTED);
     }
 
